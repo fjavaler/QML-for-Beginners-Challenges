@@ -9,13 +9,12 @@ Window {
     // HINT: you may wish to use a binding
 
     width: 640
-    height: 480
+    height: width / 1.586
 
     visible: true
     title: qsTr("Business Card")
 
     component ContactInfo: QtObject {
-
         // This is a ContactInfo object which provides the properties to fill in.
         // You can create as many instances of this as you like with different property values.
 
@@ -53,7 +52,6 @@ Window {
     }
 
     /* Your solution should contain these key features:
-
         - A Text element for each of the ContactInfo properties.
         - The name and photo image should be shown all the time.
         - These should be grouped into two categories "Basic Info" and "Details".
@@ -61,4 +59,213 @@ Window {
           toggle between showing the two categories of information.
         - Use a larger font size for the name
     */
+
+    Rectangle {
+        id: borderRectangle
+
+        anchors {
+            fill: parent
+            margins: 10
+        }
+        color:  "transparent"
+        border {
+            color: "black"
+            width: 2
+        }
+        radius: 10
+
+        Item {
+            id: borderItem
+            anchors {
+                fill: parent
+                margins: borderRectangle.radius
+            }
+
+            Rectangle {
+                id: photoFrame
+
+                anchors {
+                    top: parent.top
+                    right: parent.right
+                }
+
+                width: 200
+                height: width
+
+                color: "transparent"
+                border {
+                    color: "black"
+                    width: 2
+                }
+                radius: 5
+
+                Image {
+                    id: idPhoto
+
+                    anchors {
+                        fill: parent
+                        margins: photoFrame.radius
+                    }
+
+                    fillMode: Image.PreserveAspectFit
+                    source: Qt.resolvedUrl("IDPhoto.png")
+                }
+            }
+
+            Text {
+                id: nameText
+
+                text: myContactInfo.name
+
+                font {
+                    pixelSize: 50
+                    weight: Font.Bold
+                    capitalization: Font.AllUppercase
+                }
+            }
+
+            Rectangle {
+                id: detailsButton
+
+                property bool checked: false
+                property bool checkable: true
+
+                signal clicked
+
+                anchors {
+                    left: parent.left
+                    bottom: parent.bottom
+                }
+
+                width: 120
+                height: 40
+
+                radius: height / 2
+
+                color: detailsButton.checked || tapHandler.pressed ? "white" : "black"
+                border.color: detailsButton.checked || tapHandler.pressed ? "black" : "white"
+
+                Text {
+                    id: buttonText
+
+                    anchors.centerIn: parent
+
+                    text: qsTr("Details")
+                    font.weight: Font.Bold
+
+                    color: detailsButton.checked || tapHandler.pressed ? "black" : "white"
+                }
+
+                TapHandler {
+                    id: tapHandler
+
+                    onTapped: {
+                        if(detailsButton.checkable) {
+                            detailsButton.checked = !detailsButton.checked
+                        }
+
+                        detailsButton.clicked()
+                    }
+                }
+            }
+
+            Text {
+                id: basicInfo
+
+                visible: !detailsButton.checked
+
+                anchors {
+                    top: nameText.bottom
+                    topMargin: 10
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                }
+
+                Text {
+                    id: occupationText
+
+                    text: myContactInfo.occupation
+                    font.pixelSize: 30
+                }
+
+                Text {
+                    id: companyText
+
+                    text: myContactInfo.company
+                    font.pixelSize: 30
+
+                    anchors {
+                        top: occupationText.bottom
+                        topMargin: 10
+                    }
+                }
+            }
+
+            Text {
+                id: detailedInfo
+
+                visible: detailsButton.checked
+
+                anchors {
+                    top: nameText.bottom
+                    topMargin: 10
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                }
+
+                Text {
+                    id: addressText
+
+                    text: myContactInfo.address
+                    font.pixelSize: 30
+                }
+
+                Text {
+                    id: countryText
+
+                    text: myContactInfo.country
+                    font.pixelSize: 30
+                    anchors {
+                        top: addressText.bottom
+                        topMargin: 10
+                    }
+                }
+
+                Text {
+                    id: phoneText
+
+                    text: myContactInfo.phone
+                    font.pixelSize: 30
+                    anchors {
+                        top: countryText.bottom
+                        topMargin: 10
+                    }
+                }
+
+                Text {
+                    id: emailText
+
+                    text: myContactInfo.email
+                    font.pixelSize: 30
+                    anchors {
+                        top: phoneText.bottom
+                        topMargin: 10
+                    }
+                }
+
+                Text {
+                    id: webSiteText
+
+                    text: myContactInfo.webSite
+                    font.pixelSize: 30
+                    anchors {
+                        top: emailText.bottom
+                        topMargin: 10
+                    }
+                }
+            }
+        }
+    }
 }
